@@ -48,10 +48,25 @@ const getMyOrders = asyncHandler(async (req, res) => {
     res.json(orders);
   });
 
+  const getOrderById = asyncHandler(async (req, res) => {
+    const result = await Order.findOne({ _id: req.params.id }).lean();
+  
+    if (!result) {
+      res.status(404);
+      throw new Error('Order not found');
+    }
+  
+    const user = await User.findOne({ _id: result.user });
+    const order = { ...result, user };
+    console.log('order', order);
+  
+    res.json(order);
+  });
+  
 // @desc    Get order by ID
 // @route   GET /api/orders/:id
 // @access  Private
-const getOrderById = asyncHandler(async (req, res) => {
+ /*const getOrderById = asyncHandler(async (req, res) => {
  
   const result = await Order.findOne({_id:req.params.id}).lean()
     const user=await User.findOne({_id:result.user})
@@ -64,7 +79,8 @@ const order = {...result,user}
       res.status(404);
       throw new Error('Order not found');
     }
-  });
+  }); 
+  */
   
 
 // @desc    Update order to paid
